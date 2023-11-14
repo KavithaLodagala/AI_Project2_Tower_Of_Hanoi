@@ -1,6 +1,8 @@
 from itertools import product
 import time
 import matplotlib.pyplot as plt
+import psutil
+from tabulate import tabulate
 
 class TowerOfHanoi:
 
@@ -171,7 +173,7 @@ class TowerOfHanoi:
         s=self.check_in_visited()
         while(open):
             open.sort(reverse=True,key=lambda x:x[2])
-            #self.print_open_closed(open,closed)            
+            self.print_open_closed(open,closed)            
             best_node=open.pop()
             #print("This is best node : ", best_node[0], "This is the heuristic of best node  : ", best_node[2])
             closed.append(best_node)
@@ -184,49 +186,76 @@ class TowerOfHanoi:
             if((best_node!=None and best_node.target_rings==expected_rings_order)):
                 print("Disks are placed in target pole B")
                 break
-            print("****Expanding the best node****")
             count = self.generate_child_nodes(best_node, sn, tn, an,count)
-            print("total nodes generated : ", len(open)+len(closed), "Best nodes expanded : ", len(closed))
+        
+        print("total nodes generated : ", len(open)+len(closed), "Best nodes expanded : ", len(closed))
 
-        return root
+        return (len(open)+len(closed),len(closed))
 
-# Record the start time
-start_time = time.time()
-
+start_time1=time.time()
 n = 3  # Number of rings
-count = 0
-source_peg = "A"
-target_peg = "B"
-auxiliary_peg = "C"
-count_1=0
+Time_Elapsed=[]
+No_of_disks=[]
+Node_Generated=[]
+Node_Expanded=[]
+Memory_Used=[]
+table_data=[]
+table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
+while(time.time()-start_time1<10):
+    print(time.time()-start_time1,time.time()-start_time1>10)
+    count = 0
+    source_peg = "A"
+    target_peg = "B"
+    auxiliary_peg = "C"
+    count_1=0
 
-#To get a combination of alphabets from a single letter to 4 letters 
-alp=list(map(chr, range(65, 91)))
-#To set these combinations as state names
-states=[]
-for i in range(1,6):
-    for comb in product(alp, repeat=i):
-        states.append(''.join(comb))
+    #To get a combination of alphabets from a single letter to 4 letters 
+    alp=list(map(chr, range(65, 91)))
+    #To set these combinations as state names
+    states=[]
+    for i in range(1,6):
+        for comb in product(alp, repeat=i):
+            states.append(''.join(comb))
 
-#To set the expected order of rings on the target peg and source peg
-expected_rings_order=list(range(n,0,-1))
-#Set the root node by calling the class and initializing them
-root = TowerOfHanoi(n,source_peg, expected_rings_order, target_peg, [],auxiliary_peg,[],0)
-#add the root to the open list along with state and f(n) value of the root node
-open=[[root,states[count],root.get_fn()]]
-count+=1
-visited_nodes=[]
-total_node_expanded =[]
-heuristic_of_expanded =[]
-#build the tower of hanoi tree using this root node.
-root.build_hanoi_tree()
-# Record the end time
-end_time = time.time()
+    #To set the expected order of rings on the target peg and source peg
+    expected_rings_order=list(range(n,0,-1))
+    
+    #Set the root node by calling the class and initializing them
+    root = TowerOfHanoi(n,source_peg, expected_rings_order, target_peg, [],auxiliary_peg,[],0)
 
-# Calculate the elapsed time
-elapsed_time = end_time - start_time
+    #add the root to the open list along with state and f(n) value of the root node
+    open=[[root,states[count],root.get_fn()]]
+    count+=1
+    visited_nodes=[]
+    total_node_expanded =[]
+    heuristic_of_expanded =[]
 
-# Print the elapsed time
-print(f"Elapsed time: {elapsed_time} seconds")
-root.plot_heuristic_graph()
+    # Record the start time
+    start_time = time.time()
+
+    
+    #build the tower of hanoi tree using this root node.
+    generated,expanded=root.build_hanoi_tree()
+
+    # Record the end time
+    end_time = time.time()
+
+    # Calculate the elapsed time
+    elapsed_time = end_time - start_time
+    
+    memory = psutil.Process().memory_info().rss / (1024 * 1024)
+    Memory_Used.append(memory)
+    Node_Generated.append(generated)
+    Node_Expanded.append(expanded)
+
+    table_data.append([n,elapsed_time,memory,generated,expanded])
+
+    print(table_data)
+    # Print the elapsed time
+    print(f"Elapsed time: {elapsed_time} seconds")
+
+    print("Memory consumed : ", memory, "MB")
+    #root.plot_heuristic_graph()
+    n+=1
+print(tabulate(table_data))
 
