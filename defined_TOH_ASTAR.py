@@ -17,8 +17,8 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        #self.hn=self.heuristic_roopiks(n)
-        self.hn=self.heuristic()
+        self.hn=self.heuristic_roopiks(n)
+        #self.hn=self.heuristic()
         self.children = []
 
     def heuristic_roopiks(self,n):
@@ -64,7 +64,6 @@ class TowerOfHanoi:
         return self.gn+self.hn
 
     def print_tower_of_hanoi(self, count):
-        count = count +1
         print("g(n):",self.gn," h(n):",self.hn," f(n)=",self.gn+self.hn)
         print(self.source_peg,"-->",self.source_rings)
         print(self.target_peg,"-->",self.target_rings)
@@ -172,7 +171,7 @@ class TowerOfHanoi:
         s=self.check_in_visited()
         while(open):
             open.sort(reverse=True,key=lambda x:x[2])
-            self.print_open_closed(open,closed)            
+            #self.print_open_closed(open,closed)            
             best_node=open.pop()
             #print("This is best node : ", best_node[0], "This is the heuristic of best node  : ", best_node[2])
             closed.append(best_node)
@@ -187,6 +186,7 @@ class TowerOfHanoi:
                 break
             print("****Expanding the best node****")
             count = self.generate_child_nodes(best_node, sn, tn, an,count)
+            print("total nodes generated : ", len(open)+len(closed), "Best nodes expanded : ", len(closed))
 
         return root
 
@@ -204,7 +204,7 @@ count_1=0
 alp=list(map(chr, range(65, 91)))
 #To set these combinations as state names
 states=[]
-for i in range(1,4):
+for i in range(1,6):
     for comb in product(alp, repeat=i):
         states.append(''.join(comb))
 
