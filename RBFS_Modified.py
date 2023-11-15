@@ -15,12 +15,12 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        self.hn=self.heuristic()
+        self.hn=self.heuristic_sakshi()
         self.fn=self.gn+self.hn
         self.child=[]
 
     
-    def heuristic(self):
+    def heuristic_kavitha(self):
         hn=0
         sn=len(self.source_rings)
         for i in range(len(self.source_rings)):
@@ -38,7 +38,15 @@ class TowerOfHanoi:
             hn+=an-i-1
             hn+=self.auxiliary_rings[i]
         return hn
-
+    
+    # this heuristic calculates the weighted sum of the number of discs not on the destination rod
+    def heuristic_sakshi(self):
+        tn = len(self.target_rings)
+        sum = 0
+        for i in range(1, self.n + 1):
+            if not (i in self.target_rings): sum += i
+        return sum
+    
     def print_tower_of_hanoi(self):
         print("g(n):",self.gn," h(n):",self.hn," f(n)=",self.fn)
         print(self.source_peg,"-->",self.source_rings)

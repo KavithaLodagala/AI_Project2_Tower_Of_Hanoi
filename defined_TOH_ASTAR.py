@@ -19,11 +19,11 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        self.hn=self.heuristic_roopiks(n)
+        self.hn=self.heuristic_kavitha()
         #self.hn=self.heuristic()
         self.children = []
 
-    def heuristic_roopiks(self,n):
+    def heuristic_roopika(self,n):
         hn =0
         reference_sequence = list(range(n, 0, -1))
 
@@ -42,7 +42,7 @@ class TowerOfHanoi:
         hn =3
         return hn 
        
-    def heuristic(self):
+    def heuristic_kavitha(self):
         hn=0
         sn=len(self.source_rings)
         for i in range(len(self.source_rings)):
@@ -61,32 +61,32 @@ class TowerOfHanoi:
             hn+=self.auxiliary_rings[i]
         
         return hn
-
+    # this heuristic calculates the weighted sum of the number of discs not on the destination rod
+    def heuristic_sakshi(self):
+        tn = len(self.target_rings)
+        sum = 0
+        for i in range(1, self.n + 1):
+            if not (i in self.target_rings): sum += i
+        return sum
+    
+    # returns evaluation function values
     def get_fn(self):
         return self.gn+self.hn
-
+    #prints states of tower of hanoi
     def print_tower_of_hanoi(self, count):
         print("g(n):",self.gn," h(n):",self.hn," f(n)=",self.gn+self.hn)
         print(self.source_peg,"-->",self.source_rings)
         print(self.target_peg,"-->",self.target_rings)
         print(self.auxiliary_peg,"-->",self.auxiliary_rings)
-        print("This is the count for the best node expand : ", count)
+        print("\n")
+        print("This is the current count for the best node expanded : ", count)
         #total_node_expanded =[]
         #heuristic_of_expanded =[]
         total_node_expanded.append(count)
         heuristic_of_expanded.append(self.hn)
     
-    def plot_heuristic_graph(self):
-        plt.plot(total_node_expanded,heuristic_of_expanded, marker='o', linestyle='-')
-
-        # Adding labels and title
-        plt.xlabel('Number of Nodes Explored')
-        plt.ylabel('Heuristic Values')
-        plt.title('A* Nodes Explored vs Heuristic')
-
-        # Display the plot
-        plt.show()
-
+    
+    #function to check visited nodes 
     def check_in_visited(self):
         s=self.source_peg+''.join(list(map(str,self.source_rings)))+self.target_peg+''.join(list(map(str,self.target_rings)))+self.auxiliary_peg+''.join(list(map(str,self.auxiliary_rings)))
         if(s not in visited_nodes):
@@ -94,7 +94,7 @@ class TowerOfHanoi:
             return False
         else:
             return True
-    
+    #function to generate child nodes (states/function calls)
     def generate_child_nodes(self,best_node, sn, tn, an,count):
             if(sn>0):
                 if(tn<n and ((tn>0 and sn>0 and best_node.source_rings[-1]<best_node.target_rings[-1]) or tn==0)):
@@ -163,8 +163,7 @@ class TowerOfHanoi:
                 print(closed[i][1]+str(closed[i][2]),end=" ")
             print("]")
             
-
-
+        
     def build_hanoi_tree(self):
         global count
         #global count_1
@@ -173,7 +172,7 @@ class TowerOfHanoi:
         s=self.check_in_visited()
         while(open):
             open.sort(reverse=True,key=lambda x:x[2])
-            self.print_open_closed(open,closed)            
+            #self.print_open_closed(open,closed)            
             best_node=open.pop()
             #print("This is best node : ", best_node[0], "This is the heuristic of best node  : ", best_node[2])
             closed.append(best_node)
@@ -181,14 +180,16 @@ class TowerOfHanoi:
             sn=len(best_node.source_rings)
             tn=len(best_node.target_rings)
             an=len(best_node.auxiliary_rings)
-            print("******Best node")
+            print("\n")
+            print("****** Selected Best node ******")
             best_node.print_tower_of_hanoi(count)
             if((best_node!=None and best_node.target_rings==expected_rings_order)):
+                print("\n")
                 print("Disks are placed in target pole B")
                 break
             count = self.generate_child_nodes(best_node, sn, tn, an,count)
-        
-        print("total nodes generated : ", len(open)+len(closed), "Best nodes expanded : ", len(closed))
+        print("\n")
+        print("total number of nodes generated : ", len(open)+len(closed)," " "Total number of Best nodes expanded : ", len(closed))
 
         return (len(open)+len(closed),len(closed))
 
@@ -249,13 +250,32 @@ while(time.time()-start_time1<10):
     Node_Expanded.append(expanded)
 
     table_data.append([n,elapsed_time,memory,generated,expanded])
-
-    print(table_data)
+    print("\n")
+    
     # Print the elapsed time
+    print("\n")
     print(f"Elapsed time: {elapsed_time} seconds")
-
+    print("\n")
     print("Memory consumed : ", memory, "MB")
-    #root.plot_heuristic_graph()
+    
     n+=1
+    No_of_disks.append(n)
+print("\n")
 print(tabulate(table_data))
+# graph plotting for each heuristic to compare number of nodes generated and number of nodes expanded for each disk count
+x= No_of_disks
+y1=Node_Generated
+y2=Node_Expanded
+plt.plot(x,y1, label = "no of disks VS no of nodes generated")
+plt.plot(x,y2, label = "no of disks VS no of nodes expanded")
+
+# Adding labels and title
+plt.xlabel('Number of disks')
+plt.ylabel('Number of nodes')
+plt.title('A* Algorithm for Tower of Hanoi')
+plt.legend()
+# Display the plot
+plt.show()
+
+
 
