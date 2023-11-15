@@ -30,7 +30,7 @@ class TowerOfHanoi:
         tn=len(self.target_rings)
         for i in range(len(self.target_rings)):
             if(self.n-i-self.target_rings[i]!=0):
-                hn+=tn-i
+                hn+=tn-i-1
                 hn+=self.target_rings[i]
         
         an=len(self.auxiliary_rings)
