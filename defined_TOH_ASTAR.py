@@ -19,7 +19,7 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        self.hn=self.heuristic_kavitha()
+        self.hn=self.heuristic_roopika(n)
         #self.hn=self.heuristic()
         self.children = []
 
@@ -61,6 +61,8 @@ class TowerOfHanoi:
             hn+=self.auxiliary_rings[i]
         
         return hn
+   
+    
     # this heuristic calculates the weighted sum of the number of discs not on the destination rod
     def heuristic_sakshi(self):
         tn = len(self.target_rings)
@@ -68,7 +70,7 @@ class TowerOfHanoi:
         for i in range(1, self.n + 1):
             if not (i in self.target_rings): sum += i
         return sum
-    
+   
     # returns evaluation function values
     def get_fn(self):
         return self.gn+self.hn
@@ -78,8 +80,8 @@ class TowerOfHanoi:
         print(self.source_peg,"-->",self.source_rings)
         print(self.target_peg,"-->",self.target_rings)
         print(self.auxiliary_peg,"-->",self.auxiliary_rings)
-        print("\n")
-        print("This is the current count for the best node expanded : ", count)
+        #print("\n")
+        #print("This is the current count for the nodes generated : ", count)
         #total_node_expanded =[]
         #heuristic_of_expanded =[]
         total_node_expanded.append(count)
@@ -104,7 +106,9 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         open.append([child_node,states[count],child_node.get_fn()])
                         count+=1
-                        #child_node.print_tower_of_hanoi()
+                        #print("generated child node number=",count)
+                        #print("This is the current count for the nodes generated : ", count)
+                        #child_node.print_tower_of_hanoi(count)
                 if(an<n and ((an>0 and sn>0 and best_node.source_rings[-1]<best_node.auxiliary_rings[-1]) or an==0)):
                     ring=best_node.source_rings[-1]
                     child_node = TowerOfHanoi(n,best_node.source_peg, best_node.source_rings[:sn-1], best_node.target_peg, best_node.target_rings,best_node.auxiliary_peg,best_node.auxiliary_rings+[ring],best_node.gn+1)
@@ -112,7 +116,8 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         open.append([child_node,states[count],child_node.get_fn()])
                         count+=1
-                        #child_node.print_tower_of_hanoi()
+                        #print("generated child node number=", count)
+                        #child_node.print_tower_of_hanoi(count)
             if(tn>0):
                 if(sn<n and ((sn>0 and tn>0 and best_node.target_rings[-1]<best_node.source_rings[-1]) or sn==0)):
                     ring=best_node.target_rings[-1]
@@ -121,7 +126,8 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         open.append([child_node,states[count],child_node.get_fn()])
                         count+=1
-                        #child_node.print_tower_of_hanoi()
+                        #print("generated child node number=", count)
+                        #child_node.print_tower_of_hanoi(count)
                 if(an<n and ((an>0 and tn>0 and best_node.target_rings[-1]<best_node.auxiliary_rings[-1]) or an==0)):
                     ring=best_node.target_rings[-1]
                     child_node= TowerOfHanoi(n,best_node.source_peg, best_node.source_rings, best_node.target_peg, best_node.target_rings[:tn-1],best_node.auxiliary_peg,best_node.auxiliary_rings+[ring],best_node.gn+1)
@@ -129,7 +135,8 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         open.append([child_node,states[count],child_node.get_fn()])
                         count+=1
-                        #child_node.print_tower_of_hanoi()
+                        #print("generated child node number=", count)
+                        #child_node.print_tower_of_hanoi(count)
 
             if(an>0):
                 if(sn<n and ((sn>0 and an>0 and best_node.auxiliary_rings[-1]<best_node.source_rings[-1]) or sn==0)):
@@ -139,7 +146,8 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         open.append([child_node,states[count],child_node.get_fn()])
                         count+=1
-                        #child_node.print_tower_of_hanoi()
+                        #print("generated child node number=", count)
+                        #child_node.print_tower_of_hanoi(count)
 
                 if(tn<n and ((tn>0 and an>0 and best_node.auxiliary_rings[-1]<best_node.target_rings[-1]) or tn==0)):
                     ring=best_node.auxiliary_rings[-1]
@@ -148,11 +156,12 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         open.append([child_node,states[count],child_node.get_fn()])
                         count+=1
-                        #child_node.print_tower_of_hanoi()
+                        #print("Generated child node number=", count)
+                        #child_node.print_tower_of_hanoi(count)
             return count
 
     def print_open_closed(self,open,closed):
-            print("\n**********Best Node picked from open*********")
+            print("**********Printing Open List and Closed List*********")
             print("\nOpen-->[",end="")
             for i in range(len(open)):
                 print(open[i][1]+str(open[i][2]),end=" ")
@@ -180,8 +189,8 @@ class TowerOfHanoi:
             sn=len(best_node.source_rings)
             tn=len(best_node.target_rings)
             an=len(best_node.auxiliary_rings)
-            print("\n")
-            print("****** Selected Best node ******")
+            #print("\n")
+            print("****** Selected Best node ****** " )
             best_node.print_tower_of_hanoi(count)
             if((best_node!=None and best_node.target_rings==expected_rings_order)):
                 print("\n")
@@ -202,8 +211,10 @@ Node_Expanded=[]
 Memory_Used=[]
 table_data=[]
 table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
-while(time.time()-start_time1<10):
-    print(time.time()-start_time1,time.time()-start_time1>10)
+while(time.time()-start_time1<600):
+    #print(time.time()-start_time1,time.time()-start_time1>10)
+    print("starting A* algorithm for",n, "disks")
+    print("\n")
     count = 0
     source_peg = "A"
     target_peg = "B"
@@ -250,7 +261,6 @@ while(time.time()-start_time1<10):
     Node_Expanded.append(expanded)
 
     table_data.append([n,elapsed_time,memory,generated,expanded])
-    print("\n")
     
     # Print the elapsed time
     print("\n")
@@ -268,6 +278,10 @@ y1=Node_Generated
 y2=Node_Expanded
 plt.plot(x,y1, label = "no of disks VS no of nodes generated")
 plt.plot(x,y2, label = "no of disks VS no of nodes expanded")
+
+
+
+
 
 # Adding labels and title
 plt.xlabel('Number of disks')
