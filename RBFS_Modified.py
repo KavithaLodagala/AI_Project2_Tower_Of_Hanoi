@@ -191,7 +191,7 @@ table_data=[]
 table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
 while(time.time()-start_time1<10):
     #print(time.time()-start_time1,time.time()-start_time1>10)
-    print("starting A* algorithm for",n, "disks")
+    print("starting Recursive best first search algorithm for",n, "disks")
     print("\n")
     count = 0
     source_peg = "A"
