@@ -2,6 +2,7 @@ from itertools import product
 import time
 import psutil
 from tabulate import tabulate
+import matplotlib.pyplot as plt
 class TowerOfHanoi:
 
     def __init__(self,n,source_peg, target_peg,auxiliary_peg,level):
@@ -211,8 +212,22 @@ while(time.time()-start_time1<10):
     Node_Generated.append(len(expanded_nodes))
     Node_Expanded.append(len(visited_nodes))
     table_data.append([n,execution_time,memory,len(visited_nodes), len(expanded_nodes)])
+    
+    
     n+=1
     No_of_disks.append(n)
 print(tabulate(table_data))
-print(result,f_value)
-print("Number of Nodes generated is ",len(expanded_nodes))
+print("Final result",result,f_value)
+x= No_of_disks
+y1=Node_Generated
+y2=Node_Expanded
+plt.plot(x,y1, label = "no of disks VS no of nodes generated")
+plt.plot(x,y2, label = "no of disks VS no of nodes expanded")
+# Adding labels and title
+plt.xlabel('Number of disks')
+plt.ylabel('Number of nodes')
+plt.title('RBFS Algorithm for Tower of Hanoi')
+plt.legend()
+# Display the plot
+plt.show()
+
