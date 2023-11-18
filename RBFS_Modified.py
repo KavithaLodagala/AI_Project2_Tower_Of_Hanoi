@@ -3,6 +3,7 @@ import time
 import matplotlib.pyplot as plt
 import psutil
 from tabulate import tabulate
+import matplotlib.pyplot as plt
 class TowerOfHanoi:
 
     def __init__(self,n,source_peg, target_peg,auxiliary_peg,level):
@@ -225,9 +226,7 @@ while(time.time()-start_time1<10):
     No_of_disks.append(n)
     n+=1
 print(tabulate(table_data))
-print(result,f_value)
-print("Number of Nodes generated is ",len(expanded_nodes))
-# graph plotting for each heuristic to compare number of nodes generated and number of nodes expanded for each disk count
+print("Final result",result,f_value)
 x= No_of_disks
 y1=Node_Generated
 y2=Node_Expanded
@@ -236,7 +235,7 @@ plt.plot(x,y2, label = "no of disks VS no of nodes expanded")
 # Adding labels and title
 plt.xlabel('Number of disks')
 plt.ylabel('Number of nodes')
-plt.title('A* Algorithm for Tower of Hanoi')
+plt.title('RBFS Algorithm for Tower of Hanoi')
 plt.legend()
 # Display the plot
 plt.show()
