@@ -19,28 +19,27 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        self.hn=self.heuristic_roopika(n)
+        self.hn=self.heuristic_roopika(expected_rings_order)
         #self.hn=self.heuristic()
         self.children = []
 
-    def heuristic_roopika(self,n):
+    def heuristic_roopika(self,reference_sequence):
         hn =0
-        reference_sequence = list(range(n, 0, -1))
-
+        mismatched_elements =0
+        empty_slots =0 
         # Check if the array is empty
         if not self.target_rings:
             return 3  # Return 3 for an empty array
-
-        # Check if the order of any one element in the input array matches the reference array
-        for i in range(len(self.target_rings)):
-            if self.target_rings[i] == reference_sequence[i]:
-                # Calculate the number of empty slots and mismatched elements in comparison to the reference array
+        #else:
+        if len(self.target_rings) < 3:
                 empty_slots = len(reference_sequence) - len(self.target_rings)
-                mismatched_elements = sum(1 for x, y in zip(self.target_rings, reference_sequence) if x != y)
-                hn= mismatched_elements + empty_slots
-                return hn
-        hn =3
-        return hn 
+            # Check if the order of any one element in the input array matches the reference array
+        for i in range(len(self.target_rings)):
+                if self.target_rings[i] != reference_sequence[i]:
+                    mismatched_elements = mismatched_elements + 1
+        hn= mismatched_elements + empty_slots
+        return hn
+
        
     def heuristic_kavitha(self):
         hn=0
@@ -211,7 +210,8 @@ Node_Expanded=[]
 Memory_Used=[]
 table_data=[]
 table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
-while(time.time()-start_time1<600):
+#time.time()-start_time1<600
+while(n<12):
     #print(time.time()-start_time1,time.time()-start_time1>10)
     print("starting A* algorithm for",n, "disks")
     print("\n")
@@ -267,9 +267,9 @@ while(time.time()-start_time1<600):
     print(f"Elapsed time: {elapsed_time} seconds")
     print("\n")
     print("Memory consumed : ", memory, "MB")
-    
-    n+=1
     No_of_disks.append(n)
+    n+=1
+
 print("\n")
 print(tabulate(table_data))
 # graph plotting for each heuristic to compare number of nodes generated and number of nodes expanded for each disk count
@@ -278,11 +278,6 @@ y1=Node_Generated
 y2=Node_Expanded
 plt.plot(x,y1, label = "no of disks VS no of nodes generated")
 plt.plot(x,y2, label = "no of disks VS no of nodes expanded")
-
-
-
-
-
 # Adding labels and title
 plt.xlabel('Number of disks')
 plt.ylabel('Number of nodes')

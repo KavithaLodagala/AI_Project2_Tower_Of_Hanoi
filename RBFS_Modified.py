@@ -1,5 +1,6 @@
 from itertools import product
 import time
+import matplotlib.pyplot as plt
 import psutil
 from tabulate import tabulate
 class TowerOfHanoi:
@@ -17,27 +18,26 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        self.hn=self.heuristic_roopika(n)
+        self.hn=self.heuristic_roopika(expected_rings_order)
         self.fn=self.gn+self.hn
         self.child=[]
-    def heuristic_roopika(self,n):
+        
+    def heuristic_roopika(self,reference_sequence):
         hn =0
-        reference_sequence = list(range(n, 0, -1))
-
+        mismatched_elements =0
+        empty_slots =0 
         # Check if the array is empty
         if not self.target_rings:
             return 3  # Return 3 for an empty array
-
-        # Check if the order of any one element in the input array matches the reference array
-        for i in range(len(self.target_rings)):
-            if self.target_rings[i] == reference_sequence[i]:
-                # Calculate the number of empty slots and mismatched elements in comparison to the reference array
+        #else:
+        if len(self.target_rings) < 3:
                 empty_slots = len(reference_sequence) - len(self.target_rings)
-                mismatched_elements = sum(1 for x, y in zip(self.target_rings, reference_sequence) if x != y)
-                hn= mismatched_elements + empty_slots
-                return hn
-        hn =3
-        return hn 
+            # Check if the order of any one element in the input array matches the reference array
+        for i in range(len(self.target_rings)):
+                if self.target_rings[i] != reference_sequence[i]:
+                    mismatched_elements = mismatched_elements + 1
+        hn= mismatched_elements + empty_slots
+        return hn
     
     def heuristic_kavitha(self):
         hn=0
@@ -71,6 +71,8 @@ class TowerOfHanoi:
         print(self.source_peg,"-->",self.source_rings)
         print(self.target_peg,"-->",self.target_rings)
         print(self.auxiliary_peg,"-->",self.auxiliary_rings)
+        total_node_expanded.append(count)
+        heuristic_of_expanded.append(self.hn)
     
 
     def goal_test(self,node):
@@ -112,14 +114,16 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                    child_node.print_tower_of_hanoi()
+                        count+=1
+                    #child_node.print_tower_of_hanoi()
                 if(an<n and ((an>0 and sn>0 and node.source_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
                     ring=node.source_rings[-1]
                     child_node = TowerOfHanoi(n,node.source_peg, node.source_rings[:sn-1], node.target_peg, node.target_rings,node.auxiliary_peg,node.auxiliary_rings+[ring],node.gn+1)
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                    child_node.print_tower_of_hanoi()
+                        count+=1
+                    #child_node.print_tower_of_hanoi()
             if(tn>0):
                 if(sn<n and ((sn>0 and tn>0 and node.target_rings[-1]<node.source_rings[-1]) or sn==0)):
                     ring=node.target_rings[-1]
@@ -127,14 +131,16 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                    child_node.print_tower_of_hanoi()
+                        count+=1
+                    #child_node.print_tower_of_hanoi()
                 if(an<n and ((an>0 and tn>0 and node.target_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
                     ring=node.target_rings[-1]
                     child_node= TowerOfHanoi(n,node.source_peg, node.source_rings, node.target_peg, node.target_rings[:tn-1],node.auxiliary_peg,node.auxiliary_rings+[ring],node.gn+1)
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                    child_node.print_tower_of_hanoi()
+                        count+=1
+                    #child_node.print_tower_of_hanoi()
             if(an>0):
                 if(sn<n and ((sn>0 and an>0 and node.auxiliary_rings[-1]<node.source_rings[-1]) or sn==0)):
                     ring=node.auxiliary_rings[-1]
@@ -142,14 +148,16 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                    child_node.print_tower_of_hanoi()
+                        count+=1
+                    #child_node.print_tower_of_hanoi()
                 if(tn<n and ((tn>0 and an>0 and node.auxiliary_rings[-1]<node.target_rings[-1]) or tn==0)):
                     ring=node.auxiliary_rings[-1]
                     child_node= TowerOfHanoi(n,node.source_peg, node.source_rings, node.target_peg, node.target_rings+[ring],node.auxiliary_peg,node.auxiliary_rings[:an-1],node.gn+1)
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                    child_node.print_tower_of_hanoi()
+                        count+=1
+                    #child_node.print_tower_of_hanoi()
         else:
             successors=node.child
         if(successors==[]):
@@ -181,6 +189,9 @@ class TowerOfHanoi:
             if(result!="Failure"):
                 return result,best_node[0].fn
 start_time1=time.time()
+
+total_node_expanded =[]
+heuristic_of_expanded =[]
 n = 3  # Number of rings
 Time_Elapsed=[]
 No_of_disks=[]
@@ -211,8 +222,22 @@ while(time.time()-start_time1<10):
     Node_Generated.append(len(expanded_nodes))
     Node_Expanded.append(len(visited_nodes))
     table_data.append([n,execution_time,memory,len(visited_nodes), len(expanded_nodes)])
-    n+=1
     No_of_disks.append(n)
+    n+=1
 print(tabulate(table_data))
 print(result,f_value)
 print("Number of Nodes generated is ",len(expanded_nodes))
+# graph plotting for each heuristic to compare number of nodes generated and number of nodes expanded for each disk count
+x= No_of_disks
+y1=Node_Generated
+y2=Node_Expanded
+plt.plot(x,y1, label = "no of disks VS no of nodes generated")
+plt.plot(x,y2, label = "no of disks VS no of nodes expanded")
+# Adding labels and title
+plt.xlabel('Number of disks')
+plt.ylabel('Number of nodes')
+plt.title('A* Algorithm for Tower of Hanoi')
+plt.legend()
+# Display the plot
+plt.show()
+
