@@ -160,7 +160,12 @@ class TowerOfHanoi:
                         count+=1
                     #child_node.print_tower_of_hanoi()
         else:
+            expanded_nodes.append(node)
             successors=node.child
+            for suc in successors:
+                s=suc.source_peg+''.join(list(map(str,suc.source_rings)))+suc.target_peg+''.join(list(map(str,suc.target_rings)))+suc.auxiliary_peg+''.join(list(map(str,suc.auxiliary_rings)))
+                visited_nodes.append(s)
+
         if(successors==[]):
             print("Failure",10000,f_limit)
             return "Failure", 10000
