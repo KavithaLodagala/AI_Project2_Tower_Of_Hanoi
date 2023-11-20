@@ -23,7 +23,7 @@ class TowerOfHanoi:
         #self.hn=self.heuristic()
         self.children = []
 
-    def heuristic_roopika(self,reference_sequence):
+    '''def heuristic_roopika(self,reference_sequence):
         hn =0
         mismatched_elements =0
         empty_slots =0 
@@ -37,9 +37,28 @@ class TowerOfHanoi:
         for i in range(len(self.target_rings)):
                 if self.target_rings[i] != reference_sequence[i]:
                     mismatched_elements = mismatched_elements + 1
-        hn= mismatched_elements + empty_slots
-        return hn
+        hn= mismatched_elements + empty_slots 
+        return hn'''
+        
+    def heuristic_roopika(self,reference_sequence):
+        hn=0
+        #reference_sequence = 
 
+        # Check if the array is empty
+        if not self.target_rings:
+            return 3  # Return 3 for an empty array
+
+        # Check if the order of any one element in the input array matches the reference array
+        for i in range(len(self.target_rings)):
+            if self.target_rings[i] == reference_sequence[i]:
+                # Calculate the number of empty slots and mismatched elements in comparison to the reference array
+                empty_slots = len(reference_sequence) - len(self.target_rings)
+                mismatched_elements = sum(1 for x, y in zip(self.target_rings, reference_sequence) if x != y)
+                hn = mismatched_elements + empty_slots
+                return hn
+            
+        hn =3
+        return hn 
        
     def heuristic_kavitha(self):
         hn=0
@@ -211,7 +230,7 @@ Memory_Used=[]
 table_data=[]
 table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
 #time.time()-start_time1<600
-while(n<12):
+while(n<5):
     #print(time.time()-start_time1,time.time()-start_time1>10)
     print("starting A* algorithm for",n, "disks")
     print("\n")
@@ -285,6 +304,5 @@ plt.title('A* Algorithm for Tower of Hanoi')
 plt.legend()
 # Display the plot
 plt.show()
-
 
 

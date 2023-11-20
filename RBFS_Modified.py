@@ -19,12 +19,13 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        #self.hn=self.heuristic_roopika(expected_rings_order)
-        self.hn= self.heuristic_kavitha()
+        self.hn=self.heuristic_roopika(expected_rings_order)
+        #self.hn= self.heuristic_kavitha()
+        #self.hn= self.heuristic_sakshi()
         self.fn=self.gn+self.hn
         self.child=[]
         
-    def heuristic_roopika(self,reference_sequence):
+    '''def heuristic_roopika(self,reference_sequence):
         hn =0
         mismatched_elements =0
         empty_slots =0 
@@ -39,8 +40,27 @@ class TowerOfHanoi:
                 if self.target_rings[i] != reference_sequence[i]:
                     mismatched_elements = mismatched_elements + 1
         hn= mismatched_elements + empty_slots
-        return hn
-    
+        return hn'''
+    def heuristic_roopika(self,reference_sequence):
+        hn=0
+        #reference_sequence = 
+
+        # Check if the array is empty
+        if not self.target_rings:
+            return 3  # Return 3 for an empty array
+
+        # Check if the order of any one element in the input array matches the reference array
+        for i in range(len(self.target_rings)):
+            if self.target_rings[i] == reference_sequence[i]:
+                # Calculate the number of empty slots and mismatched elements in comparison to the reference array
+                empty_slots = len(reference_sequence) - len(self.target_rings)
+                mismatched_elements = sum(1 for x, y in zip(self.target_rings, reference_sequence) if x != y)
+                hn = mismatched_elements + empty_slots
+                return hn
+            
+        hn =3
+        return hn 
+        
     def heuristic_kavitha(self):
         hn=0
         sn=len(self.source_rings)
@@ -95,59 +115,6 @@ class TowerOfHanoi:
             return False
         else:
             return True
-        
-    '''def generate_children_node(self, node, successors,tn,sn,an):
-            expanded_nodes.append(node)
-            if(sn>0):
-                if(tn<n and ((tn>0 and sn>0 and node.source_rings[-1]<node.target_rings[-1]) or tn==0)):
-                    ring=node.source_rings[-1]
-                    child_node = TowerOfHanoi(n,node.source_peg, node.source_rings[:sn-1], node.target_peg, node.target_rings+[ring],node.auxiliary_peg,node.auxiliary_rings,node.gn+1)
-                    if(not child_node.check_in_visited()):
-                        node.child.append([child_node,child_node.fn])
-                        successors.append([child_node,child_node.fn])
-                        
-                    #child_node.print_tower_of_hanoi()
-                if(an<n and ((an>0 and sn>0 and node.source_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
-                    ring=node.source_rings[-1]
-                    child_node = TowerOfHanoi(n,node.source_peg, node.source_rings[:sn-1], node.target_peg, node.target_rings,node.auxiliary_peg,node.auxiliary_rings+[ring],node.gn+1)
-                    if(not child_node.check_in_visited()):
-                        node.child.append([child_node,child_node.fn])
-                        successors.append([child_node,child_node.fn])
-                        
-                    #child_node.print_tower_of_hanoi()
-            if(tn>0):
-                if(sn<n and ((sn>0 and tn>0 and node.target_rings[-1]<node.source_rings[-1]) or sn==0)):
-                    ring=node.target_rings[-1]
-                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings+[ring], node.target_peg, node.target_rings[:tn-1],node.auxiliary_peg, node.auxiliary_rings,node.gn+1)
-                    if(not child_node.check_in_visited()):
-                        node.child.append([child_node,child_node.fn])
-                        successors.append([child_node,child_node.fn])
-                        
-                    #child_node.print_tower_of_hanoi()
-                if(an<n and ((an>0 and tn>0 and node.target_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
-                    ring=node.target_rings[-1]
-                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings, node.target_peg, node.target_rings[:tn-1],node.auxiliary_peg,node.auxiliary_rings+[ring],node.gn+1)
-                    if(not child_node.check_in_visited()):
-                        node.child.append([child_node,child_node.fn])
-                        successors.append([child_node,child_node.fn])
-                        
-                    #child_node.print_tower_of_hanoi()
-            if(an>0):
-                if(sn<n and ((sn>0 and an>0 and node.auxiliary_rings[-1]<node.source_rings[-1]) or sn==0)):
-                    ring=node.auxiliary_rings[-1]
-                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings+[ring], node.target_peg, node.target_rings,node.auxiliary_peg,node.auxiliary_rings[:an-1],node.gn+1)
-                    if(not child_node.check_in_visited()):
-                        node.child.append([child_node,child_node.fn])
-                        successors.append([child_node,child_node.fn])
-                        
-                    #child_node.print_tower_of_hanoi()
-                if(tn<n and ((tn>0 and an>0 and node.auxiliary_rings[-1]<node.target_rings[-1]) or tn==0)):
-                    ring=node.auxiliary_rings[-1]
-                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings, node.target_peg, node.target_rings+[ring],node.auxiliary_peg,node.auxiliary_rings[:an-1],node.gn+1)
-                    if(not child_node.check_in_visited()):
-                        node.child.append([child_node,child_node.fn])
-                        successors.append([child_node,child_node.fn])
-            return node,successors           '''
         
     def RBFS_TowerOfHanoi(self,node,f_limit):
         global expanded_nodes
@@ -262,7 +229,7 @@ Memory_Used=[]
 table_data=[]
 table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
 #time.time()-start_time1<10
-while(time.time()-start_time1<10):
+while(n<7):
     #print(time.time()-start_time1,time.time()-start_time1>10)
     print("starting Recursive best first search algorithm for",n, "disks")
     print("\n")
@@ -299,5 +266,6 @@ plt.ylabel('Number of nodes')
 plt.title('RBFS Algorithm for Tower of Hanoi')
 plt.legend()
 # Display the plot
+#plt.savefig("Kavitha_RBFS_Nodes.png")
 plt.show()
 
