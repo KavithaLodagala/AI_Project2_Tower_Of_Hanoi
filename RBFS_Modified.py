@@ -1,9 +1,9 @@
-from itertools import product
+
 import time
 import matplotlib.pyplot as plt
 import psutil
 from tabulate import tabulate
-import matplotlib.pyplot as plt
+
 class TowerOfHanoi:
 
     def __init__(self,n,source_peg, target_peg,auxiliary_peg,level):
@@ -19,7 +19,8 @@ class TowerOfHanoi:
         self.auxiliary_peg = auxiliary_peg  # Auxiliary peg
         self.auxiliary_rings = auxiliary_rings
         self.gn=level
-        self.hn=self.heuristic_roopika(expected_rings_order)
+        #self.hn=self.heuristic_roopika(expected_rings_order)
+        self.hn= self.heuristic_kavitha()
         self.fn=self.gn+self.hn
         self.child=[]
         
@@ -94,7 +95,60 @@ class TowerOfHanoi:
             return False
         else:
             return True
-    
+        
+    '''def generate_children_node(self, node, successors,tn,sn,an):
+            expanded_nodes.append(node)
+            if(sn>0):
+                if(tn<n and ((tn>0 and sn>0 and node.source_rings[-1]<node.target_rings[-1]) or tn==0)):
+                    ring=node.source_rings[-1]
+                    child_node = TowerOfHanoi(n,node.source_peg, node.source_rings[:sn-1], node.target_peg, node.target_rings+[ring],node.auxiliary_peg,node.auxiliary_rings,node.gn+1)
+                    if(not child_node.check_in_visited()):
+                        node.child.append([child_node,child_node.fn])
+                        successors.append([child_node,child_node.fn])
+                        
+                    #child_node.print_tower_of_hanoi()
+                if(an<n and ((an>0 and sn>0 and node.source_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
+                    ring=node.source_rings[-1]
+                    child_node = TowerOfHanoi(n,node.source_peg, node.source_rings[:sn-1], node.target_peg, node.target_rings,node.auxiliary_peg,node.auxiliary_rings+[ring],node.gn+1)
+                    if(not child_node.check_in_visited()):
+                        node.child.append([child_node,child_node.fn])
+                        successors.append([child_node,child_node.fn])
+                        
+                    #child_node.print_tower_of_hanoi()
+            if(tn>0):
+                if(sn<n and ((sn>0 and tn>0 and node.target_rings[-1]<node.source_rings[-1]) or sn==0)):
+                    ring=node.target_rings[-1]
+                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings+[ring], node.target_peg, node.target_rings[:tn-1],node.auxiliary_peg, node.auxiliary_rings,node.gn+1)
+                    if(not child_node.check_in_visited()):
+                        node.child.append([child_node,child_node.fn])
+                        successors.append([child_node,child_node.fn])
+                        
+                    #child_node.print_tower_of_hanoi()
+                if(an<n and ((an>0 and tn>0 and node.target_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
+                    ring=node.target_rings[-1]
+                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings, node.target_peg, node.target_rings[:tn-1],node.auxiliary_peg,node.auxiliary_rings+[ring],node.gn+1)
+                    if(not child_node.check_in_visited()):
+                        node.child.append([child_node,child_node.fn])
+                        successors.append([child_node,child_node.fn])
+                        
+                    #child_node.print_tower_of_hanoi()
+            if(an>0):
+                if(sn<n and ((sn>0 and an>0 and node.auxiliary_rings[-1]<node.source_rings[-1]) or sn==0)):
+                    ring=node.auxiliary_rings[-1]
+                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings+[ring], node.target_peg, node.target_rings,node.auxiliary_peg,node.auxiliary_rings[:an-1],node.gn+1)
+                    if(not child_node.check_in_visited()):
+                        node.child.append([child_node,child_node.fn])
+                        successors.append([child_node,child_node.fn])
+                        
+                    #child_node.print_tower_of_hanoi()
+                if(tn<n and ((tn>0 and an>0 and node.auxiliary_rings[-1]<node.target_rings[-1]) or tn==0)):
+                    ring=node.auxiliary_rings[-1]
+                    child_node= TowerOfHanoi(n,node.source_peg, node.source_rings, node.target_peg, node.target_rings+[ring],node.auxiliary_peg,node.auxiliary_rings[:an-1],node.gn+1)
+                    if(not child_node.check_in_visited()):
+                        node.child.append([child_node,child_node.fn])
+                        successors.append([child_node,child_node.fn])
+            return node,successors           '''
+        
     def RBFS_TowerOfHanoi(self,node,f_limit):
         global expanded_nodes
         if(self.goal_test(node)): 
@@ -107,6 +161,7 @@ class TowerOfHanoi:
         print("children nodes")
         node.print_tower_of_hanoi()
         if(node not in expanded_nodes):
+            #node, successors = self.generate_children_node(node,successors, sn, tn, an)
             expanded_nodes.append(node)
             if(sn>0):
                 if(tn<n and ((tn>0 and sn>0 and node.source_rings[-1]<node.target_rings[-1]) or tn==0)):
@@ -115,7 +170,7 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                        count+=1
+                        
                     #child_node.print_tower_of_hanoi()
                 if(an<n and ((an>0 and sn>0 and node.source_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
                     ring=node.source_rings[-1]
@@ -123,7 +178,7 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                        count+=1
+                        
                     #child_node.print_tower_of_hanoi()
             if(tn>0):
                 if(sn<n and ((sn>0 and tn>0 and node.target_rings[-1]<node.source_rings[-1]) or sn==0)):
@@ -132,7 +187,7 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                        count+=1
+                        
                     #child_node.print_tower_of_hanoi()
                 if(an<n and ((an>0 and tn>0 and node.target_rings[-1]<node.auxiliary_rings[-1]) or an==0)):
                     ring=node.target_rings[-1]
@@ -140,7 +195,7 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                        count+=1
+                        
                     #child_node.print_tower_of_hanoi()
             if(an>0):
                 if(sn<n and ((sn>0 and an>0 and node.auxiliary_rings[-1]<node.source_rings[-1]) or sn==0)):
@@ -149,7 +204,7 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                        count+=1
+                        
                     #child_node.print_tower_of_hanoi()
                 if(tn<n and ((tn>0 and an>0 and node.auxiliary_rings[-1]<node.target_rings[-1]) or tn==0)):
                     ring=node.auxiliary_rings[-1]
@@ -157,13 +212,13 @@ class TowerOfHanoi:
                     if(not child_node.check_in_visited()):
                         node.child.append([child_node,child_node.fn])
                         successors.append([child_node,child_node.fn])
-                        count+=1
+                        
                     #child_node.print_tower_of_hanoi()
         else:
             expanded_nodes.append(node)
             successors=node.child
             for suc in successors:
-                s=suc.source_peg+''.join(list(map(str,suc.source_rings)))+suc.target_peg+''.join(list(map(str,suc.target_rings)))+suc.auxiliary_peg+''.join(list(map(str,suc.auxiliary_rings)))
+                s=suc[0].source_peg+''.join(list(map(str,suc[0].source_rings)))+suc[0].target_peg+''.join(list(map(str,suc[0].target_rings)))+suc[0].auxiliary_peg+''.join(list(map(str,suc[0].auxiliary_rings)))
                 visited_nodes.append(s)
 
         if(successors==[]):
@@ -206,6 +261,7 @@ Node_Expanded=[]
 Memory_Used=[]
 table_data=[]
 table_data.append(["Number of Disks","Elapsed Time","Memory Used","Nodes Generated","Nodes Expanded"])
+#time.time()-start_time1<10
 while(time.time()-start_time1<10):
     #print(time.time()-start_time1,time.time()-start_time1>10)
     print("starting Recursive best first search algorithm for",n, "disks")
