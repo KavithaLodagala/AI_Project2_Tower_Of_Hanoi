@@ -20,11 +20,11 @@ Installation of visual studio:
 
 ****Execution steps*****
 
-1. Project2_A05252367_ASTAR.py(A* search algorithm) and  
-2. Project2_A05252367_RBFS.py (Recursive Best First Search algorithm) files.
-2. To Solve tower of hanoi problem using A* we can run Project2_A05252367_ASTAR.py by clicking run button
+1. ASTAR.py(A* search algorithm) and  
+2.  RBFS.py (Recursive Best First Search algorithm) files.
+2. To Solve tower of hanoi problem using A* we can run  ASTAR.py by clicking run button
 3. Now the algorithm starts execution for all the disks which can complete within 30 mins (all 3 heuristic will complete execution for 11 disks in 30 mins)
-4.  To Solve tower of hanoi problem using RBFS we can run Project2_A05252367_RFS.py by clicking run button
+4.  To Solve tower of hanoi problem using RBFS we can run  RFS.py by clicking run button
 5. Now the time taken by both algorithms is calculated and memory consumed is also determined.
 
 
